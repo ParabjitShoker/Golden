@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Softgen AI Quote Request</title>
+</head>
+<body>
+  <h1>Request a Freight Quote</h1>
+  <form id="quoteForm">
+    <input type="text" name="company_name" placeholder="Company Name" required />
+    <input type="text" name="contact_name" placeholder="Contact Name" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="text" name="phone" placeholder="Phone Number" required />
+
+    <label>What services are you interested in?</label>
+    <select name="services" required>
+      <option value="">Select a Service</option>
+      <option value="LTL Freight">LTL Freight</option>
+      <option value="FTL Freight">FTL Freight</option>
+      <option value="Container Shipping">Container Shipping</option>
+    </select>
+
+    <input type="text" name="commodity_type" placeholder="Commodity Type" />
+    <input type="text" name="freight_type" placeholder="Freight Type" />
+    <input type="text" name="origin_city" placeholder="Origin City" />
+    <input type="text" name="origin_state" placeholder="Origin State" />
+    <input type="text" name="destination_city" placeholder="Destination City" />
+    <input type="text" name="destination_state" placeholder="Destination State" />
+
+    <label>Estimated Load Date:</label>
+    <input type="date" name="estimated_load_date" />
+
+    <textarea name="additional_notes" placeholder="Additional Notes"></textarea>
+
+    <button type="submit">Submit Quote</button>
+  </form>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+     const supabase = createClient(
+  'https://mkqkztrephizyfojpaqs.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rcWt6dHJlcGhpenlmb2pwYXFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1ODA0NzksImV4cCI6MjA2NzE1NjQ3OX0.qH7-HqLvaaYLSplQ2JR0xKT4ejgRYeDe2S_GrAEdGq8'
+)
+    document.getElementById('quoteForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const form = new FormData(e.target)
+      const formData = {
+        company_name: form.get('company_name'),
+        contact_name: form.get('contact_name'),
+        email: form.get('email'),
+        phone: form.get('phone'),
+        services: form.get('services'),
+        commodity_type: form.get('commodity_type'),
+        freight_type: form.get('freight_type'),
+        origin_city: form.get('origin_city'),
+        origin_state: form.get('origin_state'),
+        destination_city: form.get('destination_city'),
+        destination_state: form.get('destination_state'),
+        estimated_load_date: form.get('estimated_load_date'),
+        additional_notes: form.get('additional_notes'),
+      }
+
+      const { error } = await supabase.from('quote_requests').insert([formData])
+      if (error) {
+        alert('Error submitting form.')
+        console.error(error)
+      } else {
+        alert('Quote submitted!')
+        e.target.reset()
+      }
+    })
+  </script>
+</body>
+</html>
